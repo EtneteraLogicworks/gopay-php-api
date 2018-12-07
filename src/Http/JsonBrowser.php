@@ -11,23 +11,31 @@ class JsonBrowser
 
     private $logger;
     private $timeout;
+    private $guzzle_args
 
-    public function __construct(Logger $l, $timeoutInSeconds)
+    public function __construct(Logger $l, $timeoutInSeconds, $proxy=Null)
     {
         $this->logger = $l;
         $this->timeout = $timeoutInSeconds;
+
+        $this->guzzle_args = array();
+        $this->guzzle_args['timeout' => $this->timeout]
+        if(isset($proxy)) {
+             $this->guzzle_args['proxy' => $proxy]
+        }
+
     }
 
     public function send(Request $r)
     {
         try {
             if (class_exists('\GuzzleHttp\Message\Request')) {
-                $client = new GuzzleClient();
+                $client = new GuzzleClient($this->guzzle_args);
                 $guzzRequest = $client->createRequest($r->method, $r->url);
                 $guzzRequest->setHeaders($r->headers);
                 $guzzRequest->setBody(\GuzzleHttp\Stream\Stream::factory($r->body));
             } else {
-                $client = new GuzzleClient(['timeout' => $this->timeout]);
+                $client = new GuzzleClient($this->guzzle_args);
                 $guzzRequest = new \GuzzleHttp\Psr7\Request($r->method, $r->url, $r->headers, $r->body);
             }
             $guzzResponse = $client->send($guzzRequest);

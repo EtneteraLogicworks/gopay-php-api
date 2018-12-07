@@ -42,7 +42,8 @@ $gopay = GoPay\Api::payments([
     'isProductionMode' => false,
     'scope' => GoPay\Definition\TokenScope::ALL,
     'language' => GoPay\Definition\Language::CZECH,
-    'timeout' => 30
+    'timeout' => 30,
+    'proxy' => 'httpproxy.example.tld:8080'
 ]);
 ```
 
@@ -64,7 +65,7 @@ Optional field | Data type | Default value | Documentation |
 `scope` | string | [`GoPay\Definition\TokenScope::ALL`](src/Definition/TokenScope.php) | https://doc.gopay.com/en/?shell#scope |
 `language` | string | [`GoPay\Definition\Language::ENGLISH`](src/Definition/Language.php) | language used in `createPayment` if `lang` is not specified + used for [localization of errors](https://doc.gopay.com/en/?shell#return-errors)
 `timeout` | int | 30 | Browser timeout in seconds |
-
+`proxy` | string | Null | Proxy server `url:port` |
 
 ### Available methods
 
